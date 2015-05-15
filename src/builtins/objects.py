@@ -1,9 +1,10 @@
 __author__ = 'Sébastien Guimmara <sebastien.guimmara@gmail.com>'
 
 from hashlib import sha1
+import os
 
 
-def hash_object(filename):
+def hash_object(pit_context, filename, write_on_disk=False):
     """appends the blob header to the file content
     and hashes the result
 
@@ -18,4 +19,19 @@ def hash_object(filename):
     sha1_object = sha1()
     sha1_object.update(header)
     sha1_object.update(content)
-    return sha1_object.hexdigest()
+
+    hexdigest = sha1_object.hexdigest()
+
+    if write_on_disk:
+        hash_prefix = hexdigest[:2]
+        object_prefix_dir = os.path.join(pit_context.objects_dir, hash_prefix)
+        hash_filename = os.path.join(object_prefix_dir, hexdigest[2:])
+
+        if not os.path.exists(object_prefix_dir):
+            os.mkdir(object_prefix_dir)
+
+        if not os.path.exists(hash_filename):
+            fd = open(hash_filename, 'wb')
+            fd.write(header + content)
+
+    return hexdigest
