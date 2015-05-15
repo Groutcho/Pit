@@ -12,7 +12,7 @@ class TestHashObject(TestCase):
         file_to_hash = test_utils.create_arena_file('hello world\n', 'HELLO.txt')
         hexdigest = objects.hash_object(ctx, file_to_hash)
 
-        self.assertEqual('3b18e512dba79e4c8300dd08aeb37f8e728b8dad', hexdigest)
+        self.assertEqual('3b18e512dba79e4c8300dd08aeb37f8e728b8dad', hexdigest, 'incorrect SHA-1 sum')
 
     def test_hash_object_write(self):
         test_utils.clean_arena()
