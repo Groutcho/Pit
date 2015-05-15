@@ -1,6 +1,7 @@
 __author__ = 'Sébastien Guimmara <sebastien.guimmara@gmail.com>'
 
-import os, shutil
+import os
+import shutil
 
 ARENA_PATH = None
 
