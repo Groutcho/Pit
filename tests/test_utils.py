@@ -2,6 +2,7 @@ __author__ = 'Sébastien Guimmara <sebastien.guimmara@gmail.com>'
 
 import os
 import shutil
+from src.pit_context import PitContext
 
 ARENA_PATH = None
 
@@ -47,3 +48,8 @@ def create_arena_file(content, filename):
     fd.close()
 
     return full_path
+
+
+def get_arena_context():
+    ctx = PitContext(ARENA_PATH)
+    return ctx
