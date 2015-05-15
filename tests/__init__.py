@@ -1,0 +1,1 @@
+__author__ = 'Sébastien Guimmara <sebastien.guimmara@gmail.com>'
