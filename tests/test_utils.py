@@ -36,3 +36,14 @@ def clean_arena():
                 shutil.rmtree(file_path)
         except Exception as e:
             print(e)
+
+
+def create_arena_file(content, filename):
+    """create a file in the arena. the filename must be
+    relative."""
+    full_path = os.path.join(ARENA_PATH, filename)
+    fd = open(full_path, 'w')
+    fd.write(content)
+    fd.close()
+
+    return full_path
