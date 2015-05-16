@@ -1,3 +1,11 @@
+"""
+Pit - Git in python
+
+Copyright (C) 2015  Sébastien Guimmara
+
+initialize an empty Git repository
+"""
+
 __author__ = 'Sébastien Guimmara <sebastien.guimmara@gmail.com>'
 
 """ pit_init.py - initialize a Git repository """

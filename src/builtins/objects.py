@@ -1,3 +1,11 @@
+"""
+Pit - Git in python
+
+Copyright (C) 2015  Sébastien Guimmara
+
+handles hashing, writing and manipulating git objects
+"""
+
 __author__ = 'Sébastien Guimmara <sebastien.guimmara@gmail.com>'
 
 from hashlib import sha1

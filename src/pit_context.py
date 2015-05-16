@@ -1,3 +1,13 @@
+"""
+Pit - Git in python
+
+Copyright (C) 2015  Sébastien Guimmara
+
+PitContext class to store locations and informations about the
+current Git repository.
+"""
+
+
 __author__ = 'Sébastien Guimmara <sebastien.guimmara@gmail.com>'
 
 from os import path
