@@ -17,3 +17,4 @@ class PitContext():
         self.working_dir = working_dir
         self.repo_dir = path.join(working_dir, '.git/')
         self.objects_dir = path.join(self.repo_dir, 'objects/')
+        self.index = path.join(self.repo_dir, 'index')
