@@ -4,7 +4,7 @@ from hashlib import sha1
 import os
 
 
-def hash_object(pit_context, filename, write_on_disk=False):
+def hash_object(pit_context, filename, object_type='blob', write_on_disk=False):
     """appends the blob header to the file content
     and hashes the result
 
@@ -14,7 +14,7 @@ def hash_object(pit_context, filename, write_on_disk=False):
     content = open(filename, 'r').read().encode()
     size = len(content)
 
-    header = 'blob {0}\x00'.format(size).encode()
+    header = ('%s %i\x00' % (object_type, size)).encode()
 
     sha1_object = sha1()
     sha1_object.update(header)
