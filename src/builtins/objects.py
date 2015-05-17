@@ -10,6 +10,7 @@ __author__ = 'Sébastien Guimmara <sebastien.guimmara@gmail.com>'
 
 from hashlib import sha1
 import os
+from binascii import hexlify, unhexlify
 
 class TreeEntry:
     def __init__(self, etype='blob', name=None, sha_1=None):
@@ -50,6 +51,15 @@ def hash_tree(pit_ctx, tree, write_on_disk=False)
 
     header = ('tree %i\x00' % size).encode()
     sha1_object = sha1()
+    sha1_object.update(header)
+    sha1_object.update(content)
+
+    hexdigest = sha1_object.hexdigest()
+
+    if write_on_disk:
+        write_sha1_object(pit_ctx, hexdigest, header + content)
+
+    return hexdigest
 
 
 def hash_file(pit_context, filename, write_on_disk=False):
@@ -62,18 +72,19 @@ def hash_file(pit_context, filename, write_on_disk=False):
     content = open(os.path.join(pit_context.working_dir, filename), 'r').read().encode()
     size = len(content)
 
-    header = ('%s %i\x00' % (object_type, size)).encode()
+    header = ('blob %i\x00' % size).encode()
 
     sha1_object = sha1()
     sha1_object.update(header)
     sha1_object.update(content)
 
     hexdigest = sha1_object.hexdigest()
+    digest = sha1_object.digest()
 
     if write_on_disk:
         write_sha1_object(pit_context, hexdigest, header + content)
 
-    return hexdigest
+    return digest
 
 
 def write_sha1_object(pit_ctx, hexdigest, data):

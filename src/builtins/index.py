@@ -10,59 +10,59 @@ __author__ = 'Sébastien Guimmara <sebastien.guimmara@gmail.com>'
 
 from src.builtins.objects import hash_file, Tree, TreeEntry
 from hashlib import sha1
+from binascii import hexlify
 
 
 def update_index(pit_ctx, objects):
     """rewrite the index file with the given objects"""
 
     # index file header ('dir cache')
-    data = 'DIRC'
+    data = b'DIRC'
 
     # version number (for now, 2)
     # on 4 bytes
-    data += '\x00\x00\x00\x02'
+    data += b'\x00\x00\x00\x02'
 
     # number of entries on 4 bytes
     # for now, limit it to 255 entries
-    data += '\x00\x00\x00'
-    data += chr(len(objects))
+    data += ('\x00\x00\x00' + chr(len(objects))).encode()
 
     # write the actual entries
     for o in objects:
         # 40 bytes padding (to be implemented later)
         # those bytes store metadata about permissions, size,
         # time since modification, bit flags...
-        data += 40 * '\x30'
+        data += 40 * b'\x30'
 
-        # 20 bytes SHA-1 for the current object
-        object_sha1 = hash_file(pit_ctx, o, write_on_disk=True)
-        data += object_sha1
+        # 20-bytes SHA-1 for the current object
+        sha_1 = hash_file(pit_ctx, o, write_on_disk=True)
+        data += sha_1
 
         # 16 bits flags for future implementation
-        data += '\x00\x00'
+        data += b'\x00\x00'
 
         # the filename
-        data += o
+        data += o.encode()
 
         # the filename padded with NUL to a multiple of 8
-        data += (8 - len(o) % 8) * '\x00'
+        data += (8 - len(o) % 8) * b'\x00'
 
     # compute the SHA-1 of the data so far and append it as
     # the last value in the index file
     index_sha = sha1()
-    index_sha.update(data.encode())
-    index_sha_value = index_sha.hexdigest()
+    index_sha.update(data)
+    index_sha_value = index_sha.digest()
     data += index_sha_value
 
     fd = open(pit_ctx.index, 'wb')
-    fd.write(data.encode())
+    fd.write(data)
     fd.close()
 
 
 def get_entries(pit_ctx):
-    fd = open(pit_ctx.index, 'r')
+    fd = open(pit_ctx.index, 'rb')
     content = fd.read()
-    number_of_entries = int.from_bytes(content[8:12].encode(), byteorder='big')
+    number_of_entries = int.from_bytes(content[8:12], byteorder='big')
     fd.close()
     pos = 12
 
@@ -73,25 +73,25 @@ def get_entries(pit_ctx):
         pos += 40
 
         # read the SHA-1 of the current entry
-        sha_1 = content[pos:pos + 40]
+        sha_1 = content[pos:pos + 20]
 
         # skip the SHA-1
-        pos += 40
+        pos += 20
 
         # skip 2 non implemented bytes
         pos += 2
 
         offset = 0
-        while content[pos + offset] is not '\x00':
+        while content[pos + offset] is not 0:
             offset += 1
 
-        pathname = content[pos:pos + offset]
+        pathname = (content[pos:pos + offset])
         pos += offset
 
-        while content[pos] is '\x00':
+        while content[pos] is 0:
             pos += 1
 
         number_of_entries -= 1
-        entries.append((pathname, sha1))
+        entries.append(('blob', pathname, hexlify(sha_1)))
 
     return entries

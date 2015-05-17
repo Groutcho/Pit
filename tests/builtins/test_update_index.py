@@ -1,6 +1,9 @@
+# coding: utf-8
+
 from unittest import TestCase
 from tests import test_utils
 from src.builtins import index
+from binascii import hexlify
 
 __author__ = 'Sébastien Guimmara <sebastien.guimmara@gmail.com>'
 
@@ -12,12 +15,14 @@ class TestIndex(TestCase):
         ctx = test_utils.setup_repo()
         hellofile = test_utils.create_arena_file('hello\n', 'HELLO.txt')
         index.update_index(ctx, [hellofile])
-        index_content = open(ctx.index, 'rb').read()
+        fd = open(ctx.index, 'rb')
+        index_content = fd.read()
+        fd.close()
 
         self.assertEqual('DIRC'.encode(), index_content[:4], 'incorrect index header (must be DIRC)')
-        self.assertEqual(HELLO_SHA1, index_content[52:][:40], 'incorrect SHA-1')
-        self.assertEqual('HELLO.txt\x00\x00\x00\x00\x00\x00\x00', index_content[94:][:16].decode(), 'incorrect padding'
-                                                                                                    ' of filename')
+        self.assertEqual(HELLO_SHA1, hexlify(index_content[52:][:20]), 'incorrect SHA-1')
+        self.assertEqual('HELLO.txt\x00\x00\x00\x00\x00\x00\x00', index_content[74:][:16].decode(), 'incorrect padding'
+                                                                                           ' of filename')
 
     def test_get_entries(self):
         ctx = test_utils.setup_repo()
@@ -25,5 +30,5 @@ class TestIndex(TestCase):
         worldfile = test_utils.create_arena_file('hello\n', 'WORLD.txt')
         index.update_index(ctx, [hellofile, worldfile])
         entries = index.get_entries(ctx)
-        expected = [('HELLO.txt', HELLO_SHA1.decode('utf-8')), ('WORLD.txt', HELLO_SHA1.decode('utf-8'))]
+        expected = [('blob', b'HELLO.txt', HELLO_SHA1), ('blob', b'WORLD.txt', HELLO_SHA1)]
         self.assertEqual(entries, expected, 'extracted entries incorrect')
