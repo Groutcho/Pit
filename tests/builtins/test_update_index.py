@@ -19,11 +19,11 @@ class TestIndex(TestCase):
         self.assertEqual('HELLO.txt\x00\x00\x00\x00\x00\x00\x00', index_content[94:][:16].decode(), 'incorrect padding'
                                                                                                     ' of filename')
 
-    def test_extract_entries_from_index(self):
+    def test_get_entries(self):
         ctx = test_utils.setup_repo()
         hellofile = test_utils.create_arena_file('hello\n', 'HELLO.txt')
         worldfile = test_utils.create_arena_file('hello\n', 'WORLD.txt')
         index.update_index(ctx, [hellofile, worldfile])
-        entries = index.extract_entries_from_index(ctx)
+        entries = index.get_entries(ctx)
         expected = [('HELLO.txt', HELLO_SHA1.decode('utf-8')), ('WORLD.txt', HELLO_SHA1.decode('utf-8'))]
         self.assertEqual(entries, expected, 'extracted entries incorrect')

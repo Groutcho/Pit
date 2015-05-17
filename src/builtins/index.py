@@ -60,7 +60,7 @@ def update_index(pit_ctx, objects):
     fd.close()
 
 
-def extract_entries_from_index(pit_ctx):
+def get_entries(pit_ctx):
     fd = open(pit_ctx.index, 'r')
     content = fd.read()
     number_of_entries = int.from_bytes(content[8:12].encode(), byteorder='big')
