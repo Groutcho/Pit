@@ -58,3 +58,41 @@ def update_index(pit_ctx, objects):
     fd = open(pit_ctx.index, 'wb')
     fd.write(data.encode())
     fd.close()
+
+
+def extract_entries_from_index(pit_ctx):
+    fd = open(pit_ctx.index, 'r')
+    content = fd.read()
+    number_of_entries = int.from_bytes(content[8:12].encode(), byteorder='big')
+    fd.close()
+    pos = 12
+
+    entries = []
+
+    while number_of_entries > 0:
+        # skip 40 non implemented bytes
+        pos += 40
+
+        # read the SHA-1 of the current entry
+        sha1 = content[pos:pos+40]
+
+        # skip the SHA-1
+        pos += 40
+
+        # skip 2 non implemented bytes
+        pos += 2
+
+        offset = 0
+        while content[pos+offset] is not '\x00':
+            offset += 1
+
+        pathname = content[pos:pos+offset]
+        pos += offset
+
+        while content[pos] is '\x00':
+            pos += 1
+
+        number_of_entries -= 1
+        entries.append((pathname, sha1))
+
+    return entries
