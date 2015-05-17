@@ -13,7 +13,7 @@ from hashlib import sha1
 from binascii import hexlify
 
 
-def update_index(pit_ctx, objects):
+def update_index(ctx, objects):
     """rewrite the index file with the given objects"""
 
     # index file header ('dir cache')
@@ -35,7 +35,7 @@ def update_index(pit_ctx, objects):
         data += 40 * b'\x30'
 
         # 20-bytes SHA-1 for the current object
-        sha_1 = hash_file(pit_ctx, o, write_on_disk=True)
+        sha_1 = hash_file(ctx, o, write_on_disk=True)
         data += sha_1
 
         # 16 bits flags for future implementation
@@ -54,13 +54,13 @@ def update_index(pit_ctx, objects):
     index_sha_value = index_sha.digest()
     data += index_sha_value
 
-    fd = open(pit_ctx.index, 'wb')
+    fd = open(ctx.index, 'wb')
     fd.write(data)
     fd.close()
 
 
-def get_entries(pit_ctx):
-    fd = open(pit_ctx.index, 'rb')
+def get_entries(ctx):
+    fd = open(ctx.index, 'rb')
     content = fd.read()
     number_of_entries = int.from_bytes(content[8:12], byteorder='big')
     fd.close()
@@ -97,12 +97,12 @@ def get_entries(pit_ctx):
     return entries
 
 
-def get_trees(pit_ctx):
+def get_trees(ctx):
     """
     parse the index entries and return a tree containing
     trees and files as nodes
     """
-    entries = get_entries(pit_ctx)
+    entries = get_entries(ctx)
 
     trees = {'root': Tree()}
     for entry in entries:
