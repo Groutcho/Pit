@@ -98,10 +98,6 @@ def get_entries(ctx):
 
 
 def get_trees(ctx):
-    """
-    parse the index entries and return a tree containing
-    trees and files as nodes
-    """
     entries = get_entries(ctx)
 
     trees = {'root': Tree()}

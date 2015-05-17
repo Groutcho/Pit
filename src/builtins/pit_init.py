@@ -8,8 +8,6 @@ initialize an empty Git repository
 
 __author__ = 'Sébastien Guimmara <sebastien.guimmara@gmail.com>'
 
-""" pit_init.py - initialize a Git repository """
-
 import os.path
 
 def init(working_tree_dir):

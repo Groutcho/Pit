@@ -10,7 +10,7 @@ __author__ = 'Sébastien Guimmara <sebastien.guimmara@gmail.com>'
 
 from hashlib import sha1
 import os
-from binascii import hexlify, unhexlify
+from binascii import unhexlify
 
 class TreeEntry:
     def __init__(self, etype='blob', name=None, sha_1=None):
@@ -67,8 +67,8 @@ def hash_tree(ctx, tree, write_on_disk=False):
 
 
 def hash_file(ctx, filename, write_on_disk=False):
-    """appends the blob header to the file content
-    and hashes the result
+    """
+    appends the blob header to the file content and hashes the result
 
     see: http://www.git-scm.com/book/en/v2/Git-Internals-Git-Objects#Object-Storage
 
