@@ -19,12 +19,21 @@ def update_index(pit_ctx, objects):
     # index file header ('dir cache')
     data = 'DIRC'
 
+    # version number (for now, 2)
+    # on 4 bytes
+    data += '\x00\x00\x00\x02'
+
+    # number of entries on 4 bytes
+    # for now, limit it to 255 entries
+    data += '\x00\x00\x00'
+    data += chr(len(objects))
+
     # write the actual entries
     for o in objects:
-        # 48 bytes padding (to be implemented later)
+        # 40 bytes padding (to be implemented later)
         # those bytes store metadata about permissions, size,
         # time since modification, bit flags...
-        data += 48 * '\x30'
+        data += 40 * '\x30'
 
         # 20 bytes SHA-1 for the current object
         object_sha1 = hash_object(pit_ctx, path.join(pit_ctx.working_dir, o), 'blob', write_on_disk=True)
