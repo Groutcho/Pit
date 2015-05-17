@@ -8,12 +8,14 @@ handles index (aka 'staging area') creation and manipulation
 
 __author__ = 'Sébastien Guimmara <sebastien.guimmara@gmail.com>'
 
-from os import path
 from src.builtins.objects import hash_object
 from hashlib import sha1
+from os import path
 
 
 def update_index(pit_ctx, objects):
+    """rewrite the index file with the given objects"""
+
     # index file header ('dir cache')
     data = 'DIRC'
 
@@ -25,11 +27,14 @@ def update_index(pit_ctx, objects):
         data += 48 * '\x30'
 
         # 20 bytes SHA-1 for the current object
-        object_sha1 = hash_object(pit_ctx, o, 'blob', write_on_disk=True)
+        object_sha1 = hash_object(pit_ctx, path.join(pit_ctx.working_dir, o), 'blob', write_on_disk=True)
         data += object_sha1
 
         # 16 bits flags for future implementation
         data += '\x00\x00'
+
+        # the filename
+        data += o
 
         # the filename padded with NUL to a multiple of 8
         data += (8 - len(o) % 8) * '\x00'

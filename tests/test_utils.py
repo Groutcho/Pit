@@ -42,13 +42,14 @@ def clean_arena():
 
 def create_arena_file(content, filename):
     """create a file in the arena. the filename must be
-    relative."""
-    full_path = os.path.join(ARENA_PATH, filename)
+    relative.
+    Returns the path relative to the arena"""
+    full_path = os.path.join(get_arena_dir(), filename)
     fd = open(full_path, 'w')
     fd.write(content)
     fd.close()
 
-    return full_path
+    return filename
 
 
 def get_arena_context():
