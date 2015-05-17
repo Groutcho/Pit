@@ -34,7 +34,7 @@ class Tree:
 
     def contains_entry(self, name):
         for entry in self.entries:
-            if entry.name is name:
+            if entry.name == name:
                 return True
         return False
 
