@@ -42,14 +42,18 @@ class Tree:
         pass
 
 
-def hash_tree(pit_ctx, tree, write_on_disk=False)
+def hash_tree(pit_ctx, tree, write_on_disk=False):
+    content = b''
+    for entry in tree.entries:
+        if entry.type is 'blob':
+            # file permission followed by a space
+            content += '100644 '.encode()
+        elif entry.type is 'tree':
+            content += '40000 '.encode()
+        content += (entry.name + '\x00').encode()
+        content += unhexlify(entry.sha_1)
 
-    size = 0
-    content = ''
-    for entry in tree:
-        if entry
-
-    header = ('tree %i\x00' % size).encode()
+    header = ('tree %i\x00' % len(content)).encode()
     sha1_object = sha1()
     sha1_object.update(header)
     sha1_object.update(content)

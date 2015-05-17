@@ -29,3 +29,15 @@ class TestHashObject(TestCase):
         expected_filename = os.path.join(expected_dir, hexdigest[2:])
 
         self.assertTrue(os.path.exists(expected_filename), 'the hashed object should be written on disk')
+
+    def test_hash_tree(self):
+        expected_sha1 = 'e4949fed0d9b455c75cc2e176bffd1ad3d5732d1'
+
+        tree = Tree()
+        tree.add_entry(TreeEntry('blob', 'AAAA', 'e69de29bb2d1d6434b8b29ae775ad8c2e48c5391'))
+        tree.add_entry(TreeEntry('blob', 'CCCC', 'e69de29bb2d1d6434b8b29ae775ad8c2e48c5391'))
+        tree.add_entry(TreeEntry('tree', 'subdir', '357c3fb20114a84e1ab0fd064f1d5e778ec111ef'))
+
+        actual_sha1 = objects.hash_tree(None, tree)
+
+        self.assertEqual(expected_sha1, actual_sha1, 'SHA-1 of tree object is incorrect')
