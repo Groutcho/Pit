@@ -45,6 +45,9 @@ def create_arena_file(content, filename):
     relative.
     Returns the path relative to the arena"""
     full_path = os.path.join(get_arena_dir(), filename)
+    file_dir = os.path.dirname(full_path)
+    if not os.path.exists(file_dir):
+        os.makedirs(file_dir)
     fd = open(full_path, 'w')
     fd.write(content)
     fd.close()
