@@ -71,15 +71,19 @@ def hash_file(pit_context, filename, write_on_disk=False):
     hexdigest = sha1_object.hexdigest()
 
     if write_on_disk:
-        hash_prefix = hexdigest[:2]
-        object_prefix_dir = os.path.join(pit_context.objects_dir, hash_prefix)
-        hash_filename = os.path.join(object_prefix_dir, hexdigest[2:])
-
-        if not os.path.exists(object_prefix_dir):
-            os.mkdir(object_prefix_dir)
-
-        if not os.path.exists(hash_filename):
-            fd = open(hash_filename, 'wb')
-            fd.write(header + content)
+        write_sha1_object(pit_context, hexdigest, header + content)
 
     return hexdigest
+
+
+def write_sha1_object(pit_ctx, hexdigest, data):
+    hash_prefix = hexdigest[:2]
+    object_prefix_dir = os.path.join(pit_ctx.objects_dir, hash_prefix)
+    hash_filename = os.path.join(object_prefix_dir, hexdigest[2:])
+
+    if not os.path.exists(object_prefix_dir):
+        os.mkdir(object_prefix_dir)
+
+    if not os.path.exists(hash_filename):
+        fd = open(hash_filename, 'wb')
+        fd.write(data)
