@@ -53,7 +53,7 @@ def create_arena_file(content, filename):
 
 
 def get_arena_context():
-    ctx = PitContext(ARENA_PATH)
+    ctx = PitContext(get_arena_dir())
     return ctx
 
 
