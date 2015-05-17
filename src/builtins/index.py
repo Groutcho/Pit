@@ -36,7 +36,7 @@ def update_index(pit_ctx, objects):
         data += 40 * '\x30'
 
         # 20 bytes SHA-1 for the current object
-        object_sha1 = hash_object(pit_ctx, path.join(pit_ctx.working_dir, o), 'blob', write_on_disk=True)
+        object_sha1 = hash_object(pit_ctx, o, 'blob', write_on_disk=True)
         data += object_sha1
 
         # 16 bits flags for future implementation

@@ -19,7 +19,7 @@ def hash_object(pit_context, filename, object_type='blob', write_on_disk=False):
     see: http://www.git-scm.com/book/en/v2/Git-Internals-Git-Objects#Object-Storage
 
     """
-    content = open(filename, 'r').read().encode()
+    content = open(os.path.join(pit_context.working_dir, filename), 'r').read().encode()
     size = len(content)
 
     header = ('%s %i\x00' % (object_type, size)).encode()
