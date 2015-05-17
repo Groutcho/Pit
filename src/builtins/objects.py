@@ -11,8 +11,48 @@ __author__ = 'Sébastien Guimmara <sebastien.guimmara@gmail.com>'
 from hashlib import sha1
 import os
 
+class TreeEntry:
+    def __init__(self, etype='blob', name=None, sha_1=None):
+        self.type = etype
+        self.sha_1 = sha_1
+        self.name = name
 
-def hash_object(pit_context, filename, object_type='blob', write_on_disk=False):
+    def __repr__(self):
+        return '%s %s %s' % (self.type, self.name, self.sha_1)
+
+
+class Tree:
+    def __init__(self):
+        self.entries = []
+        self.sha1 = None
+
+    def add_entry(self, entry):
+        if not self.contains_entry(entry.name):
+            self.entries.append(entry)
+            self.compute_sha1()
+
+    def contains_entry(self, name):
+        for entry in self.entries:
+            if entry.name is name:
+                return True
+        return False
+
+    def compute_sha1(self):
+        pass
+
+
+def hash_tree(pit_ctx, tree, write_on_disk=False)
+
+    size = 0
+    content = ''
+    for entry in tree:
+        if entry
+
+    header = ('tree %i\x00' % size).encode()
+    sha1_object = sha1()
+
+
+def hash_file(pit_context, filename, write_on_disk=False):
     """appends the blob header to the file content
     and hashes the result
 

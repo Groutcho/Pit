@@ -8,9 +8,8 @@ handles index (aka 'staging area') creation and manipulation
 
 __author__ = 'Sébastien Guimmara <sebastien.guimmara@gmail.com>'
 
-from src.builtins.objects import hash_object
+from src.builtins.objects import hash_file, Tree, TreeEntry
 from hashlib import sha1
-from os import path
 
 
 def update_index(pit_ctx, objects):
@@ -36,7 +35,7 @@ def update_index(pit_ctx, objects):
         data += 40 * '\x30'
 
         # 20 bytes SHA-1 for the current object
-        object_sha1 = hash_object(pit_ctx, o, 'blob', write_on_disk=True)
+        object_sha1 = hash_file(pit_ctx, o, write_on_disk=True)
         data += object_sha1
 
         # 16 bits flags for future implementation

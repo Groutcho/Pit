@@ -10,7 +10,7 @@ class TestHashObject(TestCase):
     def test_hash_object_hash(self):
         ctx = test_utils.get_arena_context()
         file_to_hash = test_utils.create_arena_file('hello world\n', 'HELLO.txt')
-        hexdigest = objects.hash_object(ctx, file_to_hash)
+        hexdigest = objects.hash_file(ctx, file_to_hash)
 
         self.assertEqual('3b18e512dba79e4c8300dd08aeb37f8e728b8dad', hexdigest, 'incorrect SHA-1 sum')
 
@@ -20,7 +20,7 @@ class TestHashObject(TestCase):
 
         ctx = test_utils.get_arena_context()
         file_to_hash = test_utils.create_arena_file('hello world\n', 'HELLO.txt')
-        hexdigest = objects.hash_object(ctx, file_to_hash, write_on_disk=True)
+        hexdigest = objects.hash_file(ctx, file_to_hash, write_on_disk=True)
 
         expected_dir = os.path.join(ctx.objects_dir, hexdigest[:2])
         expected_filename = os.path.join(expected_dir, hexdigest[2:])
