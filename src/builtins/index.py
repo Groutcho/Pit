@@ -95,3 +95,32 @@ def get_entries(pit_ctx):
         entries.append(('blob', pathname, hexlify(sha_1)))
 
     return entries
+
+
+def get_trees(pit_ctx):
+    """
+    parse the index entries and return a tree containing
+    trees and files as nodes
+    """
+    entries = get_entries(pit_ctx)
+
+    trees = {'root': Tree()}
+    for entry in entries:
+        pathname = entry[1].decode()
+        sha_1 = entry[2]
+        if '/' in pathname:
+            elements = pathname.split('/')
+            trees['root'].add_entry(TreeEntry('tree', elements[0]))
+            for i in range(len(elements) - 1):
+                name = elements[i]
+                pointed_object = elements[i + 1]
+                object_type = 'blob' if i + 1 is (len(elements) - 1) else 'tree'
+
+                if trees.get(name) is None:
+                    trees[name] = Tree()
+                trees[name].add_entry(TreeEntry(object_type, pointed_object))
+        else:
+            # no forward slash, it's a file in the root directory
+            trees['root'].add_entry(TreeEntry('blob', pathname, sha_1))
+
+    return trees

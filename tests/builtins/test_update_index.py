@@ -32,3 +32,17 @@ class TestIndex(TestCase):
         entries = index.get_entries(ctx)
         expected = [('blob', b'HELLO.txt', HELLO_SHA1), ('blob', b'WORLD.txt', HELLO_SHA1)]
         self.assertEqual(entries, expected, 'extracted entries incorrect')
+
+    def test_extract_trees(self):
+        ctx = test_utils.setup_repo()
+        hellofile = test_utils.create_arena_file('hello\n', 'HELLO.txt')
+        worldfile = test_utils.create_arena_file('hello\n', 'WORLD.txt')
+        nested_file = test_utils.create_arena_file('hello\n', 'subdir/NESTED.txt')
+        index.update_index(ctx, [hellofile, worldfile, nested_file])
+        trees = index.get_trees(ctx)
+
+        self.assertTrue(trees['root'].contains_entry('HELLO.txt'))
+        self.assertTrue(trees['root'].contains_entry('WORLD.txt'))
+        self.assertTrue(trees['root'].contains_entry('subdir'))
+
+        self.assertTrue(trees['subdir'].contains_entry('NESTED.txt'))
