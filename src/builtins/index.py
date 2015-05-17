@@ -73,7 +73,7 @@ def get_entries(pit_ctx):
         pos += 40
 
         # read the SHA-1 of the current entry
-        sha1 = content[pos:pos + 40]
+        sha_1 = content[pos:pos + 40]
 
         # skip the SHA-1
         pos += 40
