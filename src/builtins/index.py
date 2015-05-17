@@ -74,7 +74,7 @@ def extract_entries_from_index(pit_ctx):
         pos += 40
 
         # read the SHA-1 of the current entry
-        sha1 = content[pos:pos+40]
+        sha1 = content[pos:pos + 40]
 
         # skip the SHA-1
         pos += 40
@@ -83,10 +83,10 @@ def extract_entries_from_index(pit_ctx):
         pos += 2
 
         offset = 0
-        while content[pos+offset] is not '\x00':
+        while content[pos + offset] is not '\x00':
             offset += 1
 
-        pathname = content[pos:pos+offset]
+        pathname = content[pos:pos + offset]
         pos += offset
 
         while content[pos] is '\x00':
