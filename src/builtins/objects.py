@@ -104,3 +104,17 @@ def write_sha1_object(ctx, hexdigest, data):
     if not os.path.exists(hash_filename):
         fd = open(hash_filename, 'wb')
         fd.write(zlib.compress(data))
+
+
+def hash_commit(ctx, data, write_on_disk=False):
+    header = ('commit {0:d}\x00'.format(len(data))).encode()
+    sha1_object = sha1()
+    sha1_object.update(header)
+    sha1_object.update(data)
+
+    hexdigest = sha1_object.hexdigest()
+
+    if write_on_disk:
+        write_sha1_object(ctx, hexdigest, header + data)
+
+    return hexdigest
