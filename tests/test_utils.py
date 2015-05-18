@@ -2,7 +2,8 @@ __author__ = 'Sébastien Guimmara <sebastien.guimmara@gmail.com>'
 
 import os
 import shutil
-from src.builtin import init, objects
+import context
+from src.builtin import init
 
 ARENA_PATH = None
 
@@ -55,13 +56,17 @@ def create_arena_file(content, filename):
 
 
 def get_arena_context():
-    ctx = objects.PitContext(get_arena_dir())
+    ctx = context.PitContext(get_arena_dir())
     return ctx
 
 
 def setup_repo():
     """setup an empty Git repo in the arena"""
     clean_arena()
-    init.init(get_arena_dir())
-    ctx = objects.PitContext(get_arena_dir())
-    return ctx
+    set_cd_to_arena()
+    init.init()
+    return get_arena_context()
+
+
+def set_cd_to_arena():
+    os.path.curdir = get_arena_dir()

@@ -14,7 +14,7 @@ class TestIndex(TestCase):
     def test_index_header_is_dirc(self):
         ctx = test_utils.setup_repo()
         hellofile = test_utils.create_arena_file('hello\n', 'HELLO.txt')
-        index.update_index(ctx, [hellofile])
+        index.update_index([hellofile])
         fd = open(ctx.index, 'rb')
         index_content = fd.read()
         fd.close()
@@ -25,21 +25,21 @@ class TestIndex(TestCase):
                                                                                            ' of filename')
 
     def test_get_entries(self):
-        ctx = test_utils.setup_repo()
+        test_utils.setup_repo()
         hellofile = test_utils.create_arena_file('hello\n', 'HELLO.txt')
         worldfile = test_utils.create_arena_file('hello\n', 'WORLD.txt')
-        index.update_index(ctx, [hellofile, worldfile])
-        entries = index.get_entries(ctx)
+        index.update_index([hellofile, worldfile])
+        entries = index.get_entries()
         expected = [('blob', b'HELLO.txt', HELLO_SHA1), ('blob', b'WORLD.txt', HELLO_SHA1)]
         self.assertEqual(entries, expected, 'extracted entries incorrect')
 
     def test_extract_trees(self):
-        ctx = test_utils.setup_repo()
+        test_utils.setup_repo()
         hellofile = test_utils.create_arena_file('hello\n', 'HELLO.txt')
         worldfile = test_utils.create_arena_file('hello\n', 'WORLD.txt')
         nested_file = test_utils.create_arena_file('hello\n', 'subdir/NESTED.txt')
-        index.update_index(ctx, [hellofile, worldfile, nested_file])
-        trees = index.get_trees(ctx)
+        index.update_index([hellofile, worldfile, nested_file])
+        trees = index.get_trees()
 
         self.assertTrue(trees['root'].contains_entry('HELLO.txt'))
         self.assertTrue(trees['root'].contains_entry('WORLD.txt'))

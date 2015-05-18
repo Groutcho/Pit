@@ -12,12 +12,14 @@ __author__ = 'Sébastien Guimmara <sebastien.guimmara@gmail.com>'
 
 from src.builtin.index import get_trees
 from src.builtin.objects import hash_tree, hash_commit
+import context
 
-def write_tree(ctx):
+def write_tree():
     """
     write the index trees and return the SHA-1 of the root tree
 
     """
+    ctx = context.get_context()
     trees = get_trees(ctx)
     root = trees.pop('root')
     sha_1 = hash_tree(ctx, root, write_on_disk=True)
@@ -28,7 +30,7 @@ def write_tree(ctx):
     return sha_1
 
 
-def commit_tree(ctx, **kwargs):
+def commit_tree(**kwargs):
     """
     take the tree contained in the index and
     write a commit objects whose layout is following:
@@ -43,6 +45,7 @@ def commit_tree(ctx, **kwargs):
     ====================================================================
     """
 
+    ctx = context.get_context()
     author_name = kwargs['author_name']
     author_email = kwargs['author_email']
     author_date = kwargs['author_date']

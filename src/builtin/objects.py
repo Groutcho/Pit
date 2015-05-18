@@ -14,14 +14,7 @@ from hashlib import sha1
 import os
 from binascii import unhexlify
 import zlib
-
-
-class PitContext:
-    def __init__(self, working_dir):
-        self.working_dir = working_dir
-        self.repo_dir = os.path.join(working_dir, '.git/')
-        self.objects_dir = os.path.join(self.repo_dir, 'objects/')
-        self.index = os.path.join(self.repo_dir, 'index')
+import context
 
 
 class TreeEntry:
@@ -54,7 +47,8 @@ class Tree:
         pass
 
 
-def hash_tree(ctx, tree, write_on_disk=False):
+def hash_tree(tree, write_on_disk=False):
+    ctx = context.get_context()
     content = b''
     for entry in tree.entries:
         if entry.type is 'blob':
@@ -78,13 +72,14 @@ def hash_tree(ctx, tree, write_on_disk=False):
     return hexdigest
 
 
-def hash_file(ctx, filename, write_on_disk=False):
+def hash_file(filename, write_on_disk=False):
     """
     appends the blob header to the file content and hashes the result
 
     see: http://www.git-scm.com/book/en/v2/Git-Internals-Git-Objects#Object-Storage
 
     """
+    ctx = context.get_context()
     content = open(os.path.join(ctx.working_dir, filename), 'r').read().encode()
     size = len(content)
 
@@ -98,12 +93,13 @@ def hash_file(ctx, filename, write_on_disk=False):
     digest = sha1_object.digest()
 
     if write_on_disk:
-        write_sha1_object(ctx, hexdigest, header + content)
+        write_sha1_object(hexdigest, header + content)
 
     return digest
 
 
-def write_sha1_object(ctx, hexdigest, data):
+def write_sha1_object(hexdigest, data):
+    ctx = context.get_context()
     hash_prefix = hexdigest[:2]
     object_prefix_dir = os.path.join(ctx.objects_dir, hash_prefix)
     hash_filename = os.path.join(object_prefix_dir, hexdigest[2:])
@@ -116,7 +112,8 @@ def write_sha1_object(ctx, hexdigest, data):
         fd.write(zlib.compress(data))
 
 
-def hash_commit(ctx, data, write_on_disk=False):
+def hash_commit(data, write_on_disk=False):
+    ctx = context.get_context()
     header = ('commit {0:d}\x00'.format(len(data))).encode()
     sha1_object = sha1()
     sha1_object.update(header)
@@ -125,6 +122,6 @@ def hash_commit(ctx, data, write_on_disk=False):
     hexdigest = sha1_object.hexdigest()
 
     if write_on_disk:
-        write_sha1_object(ctx, hexdigest, header + data)
+        write_sha1_object(hexdigest, header + data)
 
     return hexdigest

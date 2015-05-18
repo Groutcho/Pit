@@ -13,10 +13,13 @@ __author__ = 'Sébastien Guimmara <sebastien.guimmara@gmail.com>'
 from src.builtin.objects import hash_file, Tree, TreeEntry
 from hashlib import sha1
 from binascii import hexlify
+import context
 
 
-def update_index(ctx, objects):
+def update_index(objects):
     """rewrite the index file with the given objects"""
+
+    ctx = context.get_context()
 
     # index file header ('dir cache')
     data = b'DIRC'
@@ -37,7 +40,7 @@ def update_index(ctx, objects):
         data += 40 * b'\x30'
 
         # 20-bytes SHA-1 for the current object
-        sha_1 = hash_file(ctx, o, write_on_disk=True)
+        sha_1 = hash_file(o, write_on_disk=True)
         data += sha_1
 
         # 16 bits flags for future implementation
@@ -61,7 +64,8 @@ def update_index(ctx, objects):
     fd.close()
 
 
-def get_entries(ctx):
+def get_entries():
+    ctx = context.get_context()
     fd = open(ctx.index, 'rb')
     content = fd.read()
     number_of_entries = int.from_bytes(content[8:12], byteorder='big')
@@ -99,8 +103,8 @@ def get_entries(ctx):
     return entries
 
 
-def get_trees(ctx):
-    entries = get_entries(ctx)
+def get_trees():
+    entries = get_entries()
 
     trees = {'root': Tree()}
     for entry in entries:
