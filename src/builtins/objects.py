@@ -14,6 +14,14 @@ from binascii import unhexlify
 import zlib
 
 
+class PitContext:
+    def __init__(self, working_dir):
+        self.working_dir = working_dir
+        self.repo_dir = os.path.join(working_dir, '.git/')
+        self.objects_dir = os.path.join(self.repo_dir, 'objects/')
+        self.index = os.path.join(self.repo_dir, 'index')
+
+
 class TreeEntry:
     def __init__(self, etype='blob', name=None, sha_1=None):
         self.type = etype
