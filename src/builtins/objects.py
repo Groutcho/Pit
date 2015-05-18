@@ -11,6 +11,8 @@ __author__ = 'Sébastien Guimmara <sebastien.guimmara@gmail.com>'
 from hashlib import sha1
 import os
 from binascii import unhexlify
+import zlib
+
 
 class TreeEntry:
     def __init__(self, etype='blob', name=None, sha_1=None):
@@ -101,4 +103,4 @@ def write_sha1_object(ctx, hexdigest, data):
 
     if not os.path.exists(hash_filename):
         fd = open(hash_filename, 'wb')
-        fd.write(data)
+        fd.write(zlib.compress(data))
