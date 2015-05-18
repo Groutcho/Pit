@@ -12,8 +12,8 @@ __author__ = 'Sébastien Guimmara <sebastien.guimmara@gmail.com>'
 
 import os.path
 
-def init(working_tree_dir=os.path.curdir):
-
+def init(argv):
+    working_tree_dir = os.path.curdir
     repo_dir = os.path.join(working_tree_dir, '.git/')
     branches_dir = os.path.join(repo_dir, 'branches')
     objects_dir = os.path.join(repo_dir, 'objects')
@@ -26,6 +26,5 @@ def init(working_tree_dir=os.path.curdir):
     os.mkdir(objects_dir)
     os.mkdir(refs_dir)
 
-    os.mknod(HEAD_file, mode=666)
-
-
+    os.mknod(HEAD_file, 0o666)
+    print("initialized empty git repository in .git/")
