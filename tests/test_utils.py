@@ -2,7 +2,7 @@ __author__ = 'Sébastien Guimmara <sebastien.guimmara@gmail.com>'
 
 import os
 import shutil
-from src.builtins import pit_init, objects
+from src.builtins import init, objects
 
 ARENA_PATH = None
 
@@ -62,6 +62,6 @@ def get_arena_context():
 def setup_repo():
     """setup an empty Git repo in the arena"""
     clean_arena()
-    pit_init.init(ARENA_PATH)
+    init.init(ARENA_PATH)
     ctx = objects.PitContext(ARENA_PATH)
     return ctx

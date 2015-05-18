@@ -1,5 +1,5 @@
 from unittest import TestCase
-from src.builtins import objects, pit_init
+from src.builtins import objects, init
 from tests import test_utils
 from src.builtins.objects import TreeEntry, Tree
 import os.path
@@ -18,7 +18,7 @@ class TestHashObject(TestCase):
 
     def test_hash_object_write(self):
         test_utils.clean_arena()
-        pit_init.init(test_utils.get_arena_dir())
+        init.init(test_utils.get_arena_dir())
 
         ctx = test_utils.get_arena_context()
         file_to_hash = test_utils.create_arena_file('hello world\n', 'HELLO.txt')

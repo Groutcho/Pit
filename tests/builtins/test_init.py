@@ -1,7 +1,7 @@
 from unittest import TestCase
 import os
 from tests import test_utils
-from src.builtins.pit_init import init
+from src.builtins.init import init
 
 __author__ = 'Sébastien Guimmara <sebastien.guimmara@gmail.com>'
 
