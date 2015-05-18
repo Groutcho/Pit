@@ -10,7 +10,7 @@ __author__ = 'Sébastien Guimmara <sebastien.guimmara@gmail.com>'
 
 import os.path
 
-def init(working_tree_dir):
+def init(working_tree_dir=os.path.curdir):
 
     repo_dir = os.path.join(working_tree_dir, '.git/')
     branches_dir = os.path.join(repo_dir, 'branches')
