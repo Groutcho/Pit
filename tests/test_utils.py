@@ -62,6 +62,6 @@ def get_arena_context():
 def setup_repo():
     """setup an empty Git repo in the arena"""
     clean_arena()
-    init.init(ARENA_PATH)
-    ctx = objects.PitContext(ARENA_PATH)
+    init.init(get_arena_dir())
+    ctx = objects.PitContext(get_arena_dir())
     return ctx

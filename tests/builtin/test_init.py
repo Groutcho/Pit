@@ -10,7 +10,8 @@ class TestInit(TestCase):
     def test_init(self):
         test_utils.clean_arena()
         working_tree_dir = test_utils.get_arena_dir()
-        init(working_tree_dir)
+        os.path.curdir = working_tree_dir
+        init()
 
         repo_dir = os.path.join(working_tree_dir, '.git/')
         branches_dir = os.path.join(repo_dir, 'branches')
