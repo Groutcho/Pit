@@ -2,7 +2,7 @@ __author__ = 'Sébastien Guimmara <sebastien.guimmara@gmail.com>'
 
 import os
 import shutil
-from src.builtins import init, objects
+from src.builtin import init, objects
 
 ARENA_PATH = None
 

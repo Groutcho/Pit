@@ -2,7 +2,7 @@
 
 from unittest import TestCase
 from tests import test_utils
-from src.builtins import index
+from src.builtin import index
 from binascii import hexlify
 
 __author__ = 'Sébastien Guimmara <sebastien.guimmara@gmail.com>'

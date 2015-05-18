@@ -1,7 +1,7 @@
 from unittest import TestCase
-from src.builtins import objects, init
+from src.builtin import objects, init
 from tests import test_utils
-from src.builtins.objects import TreeEntry, Tree
+from src.builtin.objects import TreeEntry, Tree
 import os.path
 from binascii import hexlify
 
