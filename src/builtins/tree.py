@@ -52,9 +52,10 @@ def commit_tree(ctx, **kwargs):
     description = kwargs['description']
 
     tree_sha_1 = write_tree(ctx)
-    parent_sha_1 = '0000000000000000000000000000000000000000'
+    parent_commit = kwargs['parent_commit'] if 'parent_commit' in kwargs.keys() else None
     content = 'tree %s\n' % tree_sha_1
-    content += 'parent %s\n' % parent_sha_1
+    if parent_commit is not None:
+        content += 'parent %s\n' % parent_commit
     content += 'author {0:s} {1:s} {2:s}\n'.format(author_name, author_email, author_date)
 
     if committer_name is not None and committer_email is not None and committer_date is not None:
