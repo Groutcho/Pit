@@ -20,7 +20,7 @@ def add(argv):
     'pit add' expects a list of files to add and optional arguments
     """
     ctx = context.get_context()
-    files_to_add = argv
+    files_to_add = argv[2:]
     entries = index.get_entries(pathnames_only=True)
     for f in files_to_add:
         if not os.path.exists(os.path.join(ctx.working_dir, f)):
