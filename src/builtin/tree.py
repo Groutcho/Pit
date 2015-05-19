@@ -20,12 +20,12 @@ def write_tree():
 
     """
     ctx = context.get_context()
-    trees = get_trees(ctx)
+    trees = get_trees()
     root = trees.pop('root')
-    sha_1 = hash_tree(ctx, root, write_on_disk=True)
+    sha_1 = hash_tree(root, write_on_disk=True)
 
     for tree in trees:
-        hash_tree(ctx, tree, write_on_disk=True)
+        hash_tree(tree, write_on_disk=True)
 
     return sha_1
 
@@ -56,7 +56,7 @@ def commit_tree(**kwargs):
 
     description = kwargs['description']
 
-    tree_sha_1 = write_tree(ctx)
+    tree_sha_1 = write_tree()
     parent_commit = kwargs['parent_commit'] if 'parent_commit' in kwargs.keys() else None
     content = 'tree %s\n' % tree_sha_1
     if parent_commit is not None:
@@ -70,4 +70,4 @@ def commit_tree(**kwargs):
     content += description
     content += '\n'
 
-    return hash_commit(ctx, content.encode(), write_on_disk=True)
+    return hash_commit(content.encode(), write_on_disk=True)

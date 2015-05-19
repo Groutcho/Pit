@@ -67,7 +67,7 @@ def hash_tree(tree, write_on_disk=False):
     hexdigest = sha1_object.hexdigest()
 
     if write_on_disk:
-        write_sha1_object(ctx, hexdigest, header + content)
+        write_sha1_object(hexdigest, header + content)
 
     return hexdigest
 
