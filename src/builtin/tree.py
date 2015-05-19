@@ -45,7 +45,6 @@ def commit_tree(**kwargs):
     ====================================================================
     """
 
-    ctx = context.get_context()
     author_name = kwargs['author_name']
     author_email = kwargs['author_email']
     author_date = kwargs['author_date']

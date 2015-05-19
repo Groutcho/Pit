@@ -48,7 +48,6 @@ class Tree:
 
 
 def hash_tree(tree, write_on_disk=False):
-    ctx = context.get_context()
     content = b''
     for entry in tree.entries:
         if entry.type is 'blob':
