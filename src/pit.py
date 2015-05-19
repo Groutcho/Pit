@@ -13,9 +13,11 @@ __author__ = 'Sébastien Guimmara <sebastien.guimmara@gmail.com>'
 import sys
 import getopt
 import builtin.init
+import builtin.add
 
 
-command_map = {'init': builtin.init.init}
+command_map = {'init': builtin.init.init,
+               'add': builtin.add.add}
 
 
 def usage():
