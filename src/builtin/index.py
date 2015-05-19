@@ -10,11 +10,12 @@ handles index (aka 'staging area') creation and manipulation
 
 __author__ = 'Sébastien Guimmara <sebastien.guimmara@gmail.com>'
 
-from src.builtin.objects import hash_file, Tree, TreeEntry
+from builtin.objects import hash_file, Tree, TreeEntry
 from hashlib import sha1
 from binascii import hexlify, unhexlify
 import context
 import os
+import struct
 
 
 def update_index(objects):
@@ -35,22 +36,32 @@ def update_index(objects):
 
     # write the actual entries
     for o in objects:
-        # 40 bytes padding (to be implemented later)
-        # those bytes store metadata about permissions, size,
-        # time since modification, bit flags...
-        data += 40 * b'\x30'
+        stat = os.stat(o)
+
+        data += struct.pack('>f', stat.st_ctime)
+        data += struct.pack('>f', stat.st_ctime_ns)
+        data += struct.pack('>f', stat.st_mtime)
+        data += struct.pack('>f', stat.st_mtime_ns)
+        data += stat.st_dev.to_bytes(4, byteorder='big')
+        data += stat.st_ino.to_bytes(4, byteorder='big')
+        # even though the Git specification allows symlinks and gitlinks,
+        # as well as mode 755, consider all entries as files with permission 644
+        data += b'\x00\x00\x81\xa4'
+        data += stat.st_uid.to_bytes(4, byteorder='big')
+        data += stat.st_gid.to_bytes(4, byteorder='big')
+        data += stat.st_size.to_bytes(4, byteorder='big')
 
         # 20-bytes SHA-1 for the current object
         sha_1 = hash_file(o, write_on_disk=True)
         data += unhexlify(sha_1)
 
-        # 16 bits flags for future implementation
-        data += b'\x00\x00'
+        # filename size without padding
+        data += len(o).to_bytes(2, byteorder='big')
 
         # the filename
         data += o.encode()
 
-        # the filename padded with NUL to ensure that the entry size is a multiple of 8
+        # pad the entry with NULs to ensure that it's a multiple of 8 (while being NUL terminated)
         entry_size = len(o) + 62
         data += ((entry_size - (entry_size % 8) + 8) - entry_size) * b'\x00'
 

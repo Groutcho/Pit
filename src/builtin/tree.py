@@ -10,8 +10,8 @@ handles writing and manipulating git trees
 
 __author__ = 'Sébastien Guimmara <sebastien.guimmara@gmail.com>'
 
-from src.builtin.index import get_trees
-from src.builtin.objects import hash_tree, hash_commit
+from builtin.index import get_trees
+from builtin.objects import hash_tree, hash_commit
 import context
 
 def write_tree():
