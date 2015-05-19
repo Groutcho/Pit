@@ -14,6 +14,7 @@ from src.builtin.objects import hash_file, Tree, TreeEntry
 from hashlib import sha1
 from binascii import hexlify, unhexlify
 import context
+import os
 
 
 def update_index(objects):
@@ -67,6 +68,10 @@ def update_index(objects):
 
 def get_entries(pathnames_only=False):
     ctx = context.get_context()
+
+    if not os.path.exists(ctx.index):
+        return []
+
     fd = open(ctx.index, 'rb')
     content = fd.read()
     number_of_entries = int.from_bytes(content[8:12], byteorder='big')
