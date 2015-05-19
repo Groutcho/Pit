@@ -49,8 +49,9 @@ def update_index(objects):
         # the filename
         data += o.encode()
 
-        # the filename padded with NUL to a multiple of 8
-        data += (8 - len(o) % 8) * b'\x00'
+        # the filename padded with NUL to ensure that the entry size is a multiple of 8
+        entry_size = len(o) + 62
+        data += ((entry_size - (entry_size % 8) + 8) - entry_size) * b'\x00'
 
     # compute the SHA-1 of the data so far and append it as
     # the last value in the index file
