@@ -64,7 +64,7 @@ def update_index(objects):
     fd.close()
 
 
-def get_entries():
+def get_entries(pathnames_only=False):
     ctx = context.get_context()
     fd = open(ctx.index, 'rb')
     content = fd.read()
@@ -98,7 +98,10 @@ def get_entries():
             pos += 1
 
         number_of_entries -= 1
-        entries.append(('blob', pathname, hexlify(sha_1)))
+        if pathnames_only:
+            entries.append(pathname.decode())
+        else:
+            entries.append(('blob', pathname, hexlify(sha_1)))
 
     return entries
 
