@@ -14,14 +14,13 @@ class TestHashObject(TestCase):
         file_to_hash = test_utils.create_arena_file('hello world\n', 'HELLO.txt')
         sha_1 = objects.hash_file(file_to_hash)
 
-        self.assertEqual(b'3b18e512dba79e4c8300dd08aeb37f8e728b8dad', hexlify(sha_1), 'incorrect SHA-1 sum')
+        self.assertEqual('3b18e512dba79e4c8300dd08aeb37f8e728b8dad', sha_1, 'incorrect SHA-1 sum')
 
     def test_hash_object_write(self):
         test_utils.setup_repo()
         ctx = test_utils.get_arena_context()
         file_to_hash = test_utils.create_arena_file('hello world\n', 'HELLO.txt')
-        hexdigest = hexlify(objects.hash_file(file_to_hash, write_on_disk=True))
-        hexdigest = hexdigest.decode()
+        hexdigest = objects.hash_file(file_to_hash, write_on_disk=True)
 
         expected_dir = os.path.join(ctx.objects_dir, hexdigest[:2])
         expected_filename = os.path.join(expected_dir, hexdigest[2:])

@@ -90,12 +90,11 @@ def hash_file(filename, write_on_disk=False):
     sha1_object.update(content)
 
     hexdigest = sha1_object.hexdigest()
-    digest = sha1_object.digest()
 
     if write_on_disk:
         write_sha1_object(hexdigest, header + content)
 
-    return digest
+    return hexdigest
 
 
 def write_sha1_object(hexdigest, data):

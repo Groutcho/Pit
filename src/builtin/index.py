@@ -12,7 +12,7 @@ __author__ = 'Sébastien Guimmara <sebastien.guimmara@gmail.com>'
 
 from src.builtin.objects import hash_file, Tree, TreeEntry
 from hashlib import sha1
-from binascii import hexlify
+from binascii import hexlify, unhexlify
 import context
 
 
@@ -41,7 +41,7 @@ def update_index(objects):
 
         # 20-bytes SHA-1 for the current object
         sha_1 = hash_file(o, write_on_disk=True)
-        data += sha_1
+        data += unhexlify(sha_1)
 
         # 16 bits flags for future implementation
         data += b'\x00\x00'
