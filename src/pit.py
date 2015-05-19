@@ -14,10 +14,12 @@ import sys
 import getopt
 import builtin.init
 import builtin.add
+import builtin.commit
 
 
 command_map = {'init': builtin.init.init,
-               'add': builtin.add.add}
+               'add': builtin.add.add,
+               'commit': builtin.commit.commit}
 
 
 def usage():
