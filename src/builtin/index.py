@@ -38,6 +38,21 @@ class StatInfo:
         self.gid = 0
         self.size = 0
 
+    def to_bytes(self):
+        data = b''
+        data += struct.pack('>f', self.ctime)
+        data += struct.pack('>f', self.ctime_ns)
+        data += struct.pack('>f', self.mtime)
+        data += struct.pack('>f', self.mtime_ns)
+        data += self.dev.to_bytes(4, byteorder='big')
+        data += self.ino.to_bytes(4, byteorder='big')
+        # even though the Git specification allows symlinks and gitlinks,
+        # as well as mode 755, consider all entries as files with permission 644
+        data += b'\x00\x00\x81\xa4'
+        data += self.uid.to_bytes(4, byteorder='big')
+        data += self._gid.to_bytes(4, byteorder='big')
+        data += self.size.to_bytes(4, byteorder='big')
+
 
 def update_index(objects):
     """rewrite the index file with the given objects"""
