@@ -3,6 +3,7 @@ from src.builtin import objects
 from tests import test_utils
 from src.builtin.objects import TreeEntry, Tree
 import os.path
+import src.builtin.index as index
 
 __author__ = 'Sébastien Guimmara <sebastien.guimmara@gmail.com>'
 
@@ -37,3 +38,12 @@ class TestObjects(TestCase):
         actual_sha1 = objects.hash_tree(tree)
 
         self.assertEqual(expected_sha1, actual_sha1, 'SHA-1 of tree object is incorrect')
+
+    def test_does_object_exist(self):
+        test_utils.setup_repo()
+        store_file = test_utils.create_arena_file('store', 'STORE.txt')
+        nostore_file = test_utils.create_arena_file("don't store", 'DONTSTORE.txt')
+        store_sha_1 = objects.hash_file(store_file, write_on_disk=True)
+        nostore_sha_1 = objects.hash_file(nostore_file, write_on_disk=False)
+        self.assertTrue(objects.does_object_exist(store_sha_1))
+        self.assertFalse(objects.does_object_exist(nostore_sha_1))
