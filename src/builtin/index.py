@@ -18,6 +18,27 @@ import os
 import struct
 
 
+class IndexEntry:
+    def __init__(self, pathname, sha_1, stat_info):
+        self.pathname = pathname
+        self.sha_1 = sha_1
+        self.stat_info = stat_info
+
+
+class StatInfo:
+    def __init__(self):
+        self.ctime = 0
+        self.ctime_ns = 0
+        self.mtime = 0
+        self.mtime_ns = 0
+        self.dev = 0
+        self.ino = 0
+        self.mode = 0
+        self.uid = 0
+        self.gid = 0
+        self.size = 0
+
+
 def update_index(objects):
     """rewrite the index file with the given objects"""
 
@@ -92,33 +113,30 @@ def get_entries(pathnames_only=False):
     entries = []
 
     while number_of_entries > 0:
-        # skip 40 non implemented bytes
+        stat_info = extract_stat_info(content[pos:pos+40])
         pos += 40
 
         # read the SHA-1 of the current entry
-        sha_1 = content[pos:pos + 20]
-
-        # skip the SHA-1
+        sha_1 = hexlify(content[pos:pos + 20])
         pos += 20
 
         # skip 2 non implemented bytes
+        pathname_size = int.from_bytes(content[pos:pos+2], byteorder='big')
         pos += 2
 
-        offset = 0
-        while content[pos + offset] is not 0:
-            offset += 1
+        pathname = (content[pos:pos + pathname_size]).decode()
+        pos += pathname_size
 
-        pathname = (content[pos:pos + offset])
-        pos += offset
+        current_entry = IndexEntry(pathname, sha_1, stat_info)
 
         while content[pos] is 0:
             pos += 1
 
         number_of_entries -= 1
         if pathnames_only:
-            entries.append(pathname.decode())
+            entries.append(pathname)
         else:
-            entries.append(('blob', pathname, hexlify(sha_1)))
+            entries.append(current_entry)
 
     return entries
 
@@ -128,8 +146,8 @@ def get_trees():
 
     trees = {'root': objects.Tree()}
     for entry in entries:
-        pathname = entry[1].decode()
-        sha_1 = entry[2]
+        pathname = entry.pathname
+        sha_1 = entry.sha_1
         if '/' in pathname:
             elements = pathname.split('/')
             trees['root'].add_entry(objects.TreeEntry('tree', elements[0]))
@@ -146,3 +164,20 @@ def get_trees():
             trees['root'].add_entry(objects.TreeEntry('blob', pathname, sha_1))
 
     return trees
+
+
+def extract_stat_info(buffer):
+    assert len(buffer) == 40
+    result = StatInfo()
+    result.ctime = struct.unpack('>f', buffer[0:4])[0]
+    result.ctime_ns = struct.unpack('>f', buffer[4:8])[0]
+    result.mtime = struct.unpack('>f', buffer[8:12])[0]
+    result.mtime_ns = struct.unpack('>f', buffer[12:16])[0]
+    result.dev = struct.unpack('>i', buffer[16:20])[0]
+    result.ino = struct.unpack('>i', buffer[20:24])[0]
+    result.mode = struct.unpack('>i', buffer[24:28])[0]
+    result.uid = struct.unpack('>i', buffer[28:32])[0]
+    result.gid = struct.unpack('>i', buffer[32:36])[0]
+    result.size = struct.unpack('>i', buffer[36:40])[0]
+
+    return result

@@ -30,8 +30,11 @@ class TestIndex(TestCase):
         worldfile = test_utils.create_arena_file('hello\n', 'WORLD.txt')
         index.update_index([hellofile, worldfile])
         entries = index.get_entries()
-        expected = [('blob', b'HELLO.txt', HELLO_SHA1), ('blob', b'WORLD.txt', HELLO_SHA1)]
-        self.assertEqual(entries, expected, 'extracted entries incorrect')
+
+        self.assertEqual(entries[0].sha_1, HELLO_SHA1)
+        self.assertEqual(entries[1].sha_1, HELLO_SHA1)
+        self.assertEqual(entries[0].pathname, 'HELLO.txt')
+        self.assertEqual(entries[1].pathname, 'WORLD.txt')
 
     def test_extract_trees(self):
         test_utils.setup_repo()
