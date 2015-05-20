@@ -1,14 +1,13 @@
 from unittest import TestCase
-from src.builtin import objects, init
+from src.builtin import objects
 from tests import test_utils
 from src.builtin.objects import TreeEntry, Tree
 import os.path
-from binascii import hexlify
 
 __author__ = 'Sébastien Guimmara <sebastien.guimmara@gmail.com>'
 
 
-class TestHashObject(TestCase):
+class TestObjects(TestCase):
     def test_hash_object_hash(self):
         test_utils.set_cd_to_arena()
         file_to_hash = test_utils.create_arena_file('hello world\n', 'HELLO.txt')
