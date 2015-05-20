@@ -21,7 +21,7 @@ class TestIndex(TestCase):
 
         self.assertEqual('DIRC'.encode(), index_content[:4], 'incorrect index header (must be DIRC)')
         self.assertEqual(HELLO_SHA1, hexlify(index_content[52:][:20]), 'incorrect SHA-1')
-        self.assertEqual('HELLO.txt\x00\x00\x00\x00\x00\x00\x00', index_content[74:][:16].decode(), 'incorrect padding'
+        self.assertEqual('HELLO.txt\x00', index_content[74:][:10].decode(), 'incorrect padding'
                                                                                            ' of filename')
 
     def test_get_entries(self):

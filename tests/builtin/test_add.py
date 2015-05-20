@@ -13,7 +13,7 @@ class TestAdd(TestCase):
         file_c = tests.test_utils.create_arena_file('', 'CCCC')
         index.update_index([file_a, file_b, file_c])
         file_d = tests.test_utils.create_arena_file('', 'DDDD')
-        add.add([file_d])
+        add.add(['pit', 'add', file_d])
         actual_entries = index.get_entries(pathnames_only=True)
         expected_entries = ['AAAA', 'BBBB', 'CCCC', 'DDDD']
         self.assertEqual(actual_entries, expected_entries)
