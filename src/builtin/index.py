@@ -59,14 +59,26 @@ class StatInfo:
         # as well as mode 755, consider all entries as files with permission 644
         data += b'\x00\x00\x81\xa4'
         data += self.uid.to_bytes(4, byteorder='big')
-        data += self._gid.to_bytes(4, byteorder='big')
+        data += self.gid.to_bytes(4, byteorder='big')
         data += self.size.to_bytes(4, byteorder='big')
+        return data
 
 
 def update_index(pathnames):
     """rewrite the index file with the given objects"""
 
     ctx = context.get_context()
+    entries = get_entries()
+
+    # compare the entries in index with what we want to add from the work tree
+    # if the SHA-1s match, skip this entry: the file has not been modified
+    for p in pathnames:
+        add_entry = True
+        for i in range(len(entries)):
+            if entries[i].pathname == p and entries[i].sha_1 == hash_file(p, write_on_disk=False):
+                add_entry = False
+        if add_entry:
+            entries.append(create_entry(p))
 
     # index file header ('dir cache')
     data = b'DIRC'
@@ -77,7 +89,7 @@ def update_index(pathnames):
 
     # number of entries on 4 bytes
     # for now, limit it to 255 entries
-    data += ('\x00\x00\x00' + chr(len(pathnames))).encode()
+    data += ('\x00\x00\x00' + chr(len(entries))).encode()
 
     # write the actual entries (sorted by bytes)
     for o in sorted(entries, key=lambda ent: bytes(ent.pathname, encoding='utf-8')):
@@ -178,3 +190,24 @@ def extract_stat_info(buffer):
     result.size = struct.unpack('>i', buffer[36:40])[0]
 
     return result
+
+
+def create_entry(pathname):
+    assert not os.path.isabs(pathname)
+    ctx = context.get_context()
+
+    stat = os.stat(os.path.join(ctx.working_dir, pathname))
+    stat_info = StatInfo()
+    stat_info.ctime = stat.st_ctime
+    stat_info.ctime_ns = stat.st_ctime_ns
+    stat_info.mtime = stat.st_mtime
+    stat_info.mtime_ns = stat.st_mtime_ns
+    stat_info.dev = stat.st_dev
+    stat_info.ino = stat.st_ino
+    stat_info.mode = 33188
+    stat_info.uid = stat.st_uid
+    stat_info.gid = stat.st_gid
+    stat_info.size = stat.st_size
+
+    sha_1 = hash_file(pathname, write_on_disk=True)
+    return IndexEntry(pathname, sha_1, stat_info)
