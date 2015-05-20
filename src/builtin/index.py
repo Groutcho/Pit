@@ -36,7 +36,7 @@ def update_index(objects):
 
     # write the actual entries
     for o in objects:
-        stat = os.stat(o)
+        stat = os.stat(os.path.join(ctx.working_dir, o))
 
         data += struct.pack('>f', stat.st_ctime)
         data += struct.pack('>f', stat.st_ctime_ns)
