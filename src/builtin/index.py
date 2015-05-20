@@ -10,7 +10,7 @@ handles index (aka 'staging area') creation and manipulation
 
 __author__ = 'Sébastien Guimmara <sebastien.guimmara@gmail.com>'
 
-from src.builtin.objects import hash_file, Tree, TreeEntry
+import src.builtin.objects as objects
 from hashlib import sha1
 from binascii import hexlify, unhexlify
 import context
@@ -126,23 +126,23 @@ def get_entries(pathnames_only=False):
 def get_trees():
     entries = get_entries()
 
-    trees = {'root': Tree()}
+    trees = {'root': objects.Tree()}
     for entry in entries:
         pathname = entry[1].decode()
         sha_1 = entry[2]
         if '/' in pathname:
             elements = pathname.split('/')
-            trees['root'].add_entry(TreeEntry('tree', elements[0]))
+            trees['root'].add_entry(objects.TreeEntry('tree', elements[0]))
             for i in range(len(elements) - 1):
                 name = elements[i]
                 pointed_object = elements[i + 1]
                 object_type = 'blob' if i + 1 is (len(elements) - 1) else 'tree'
 
                 if trees.get(name) is None:
-                    trees[name] = Tree()
-                trees[name].add_entry(TreeEntry(object_type, pointed_object))
+                    trees[name] = objects.Tree()
+                trees[name].add_entry(objects.TreeEntry(object_type, pointed_object))
         else:
             # no forward slash, it's a file in the root directory
-            trees['root'].add_entry(TreeEntry('blob', pathname, sha_1))
+            trees['root'].add_entry(objects.TreeEntry('blob', pathname, sha_1))
 
     return trees
