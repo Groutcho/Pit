@@ -24,6 +24,15 @@ class IndexEntry:
         self.sha_1 = sha_1
         self.stat_info = stat_info
 
+    def to_bytes(self):
+        data = self.stat_info.to_bytes()
+        data += unhexlify(self.sha_1)
+        data += len(self.pathname).to_bytes(2, byteorder='big')
+        data += self.pathname.encode()
+        entry_size = len(data)
+        data += ((entry_size - (entry_size % 8) + 8) - entry_size) * b'\x00'
+        return data
+
 
 class StatInfo:
     def __init__(self):
