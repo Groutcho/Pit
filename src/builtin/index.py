@@ -34,8 +34,8 @@ def update_index(objects):
     # for now, limit it to 255 entries
     data += ('\x00\x00\x00' + chr(len(objects))).encode()
 
-    # write the actual entries
-    for o in objects:
+    # write the actual entries (sorted by bytes)
+    for o in sorted(objects, key=lambda obj: bytes(obj, encoding='utf-8')):
         stat = os.stat(os.path.join(ctx.working_dir, o))
 
         data += struct.pack('>f', stat.st_ctime)
