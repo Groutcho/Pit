@@ -63,7 +63,7 @@ class StatInfo:
         data += self.size.to_bytes(4, byteorder='big')
 
 
-def update_index(objects):
+def update_index(pathnames):
     """rewrite the index file with the given objects"""
 
     ctx = context.get_context()
@@ -77,38 +77,11 @@ def update_index(objects):
 
     # number of entries on 4 bytes
     # for now, limit it to 255 entries
-    data += ('\x00\x00\x00' + chr(len(objects))).encode()
+    data += ('\x00\x00\x00' + chr(len(pathnames))).encode()
 
     # write the actual entries (sorted by bytes)
-    for o in sorted(objects, key=lambda obj: bytes(obj, encoding='utf-8')):
-        stat = os.stat(os.path.join(ctx.working_dir, o))
-
-        data += struct.pack('>f', stat.st_ctime)
-        data += struct.pack('>f', stat.st_ctime_ns)
-        data += struct.pack('>f', stat.st_mtime)
-        data += struct.pack('>f', stat.st_mtime_ns)
-        data += stat.st_dev.to_bytes(4, byteorder='big')
-        data += stat.st_ino.to_bytes(4, byteorder='big')
-        # even though the Git specification allows symlinks and gitlinks,
-        # as well as mode 755, consider all entries as files with permission 644
-        data += b'\x00\x00\x81\xa4'
-        data += stat.st_uid.to_bytes(4, byteorder='big')
-        data += stat.st_gid.to_bytes(4, byteorder='big')
-        data += stat.st_size.to_bytes(4, byteorder='big')
-
-        # 20-bytes SHA-1 for the current object
-        sha_1 = hash_file(o, write_on_disk=True)
-        data += unhexlify(sha_1)
-
-        # filename size without padding
-        data += len(o).to_bytes(2, byteorder='big')
-
-        # the filename
-        data += o.encode()
-
-        # pad the entry with NULs to ensure that it's a multiple of 8 (while being NUL terminated)
-        entry_size = len(o) + 62
-        data += ((entry_size - (entry_size % 8) + 8) - entry_size) * b'\x00'
+    for o in sorted(entries, key=lambda ent: bytes(ent.pathname, encoding='utf-8')):
+        data += o.to_bytes()
 
     # compute the SHA-1 of the data so far and append it as
     # the last value in the index file
