@@ -75,7 +75,7 @@ def update_index(pathnames):
     for p in pathnames:
         add_entry = True
         for i in range(len(entries)):
-            if entries[i].pathname == p and entries[i].sha_1 == hash_file(p, write_on_disk=False):
+            if entries[i].pathname == p and entries[i].sha_1 == objects.hash_file(p, write_on_disk=False):
                 add_entry = False
         if add_entry:
             entries.append(create_entry(p))
@@ -209,5 +209,5 @@ def create_entry(pathname):
     stat_info.gid = stat.st_gid
     stat_info.size = stat.st_size
 
-    sha_1 = hash_file(pathname, write_on_disk=True)
+    sha_1 = objects.hash_file(pathname, write_on_disk=True)
     return IndexEntry(pathname, sha_1, stat_info)
