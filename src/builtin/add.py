@@ -21,10 +21,9 @@ def add(argv):
     """
     ctx = context.get_context()
     files_to_add = argv[2:]
-    entries = index.get_entries(pathnames_only=True)
     for f in files_to_add:
         if not os.path.exists(os.path.join(ctx.working_dir, f)):
             print('fatal: pathspec "%s" did not match any files' % f)
             sys.exit(2)
 
-    index.update_index(entries + files_to_add)
+    index.update_index(files_to_add)
