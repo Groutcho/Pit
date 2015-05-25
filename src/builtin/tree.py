@@ -13,6 +13,7 @@ __author__ = 'Sébastien Guimmara <sebastien.guimmara@gmail.com>'
 from builtin.index import get_trees
 from builtin.objects import hash_tree, hash_commit
 import context
+import os
 
 def write_tree():
     """
@@ -69,4 +70,16 @@ def commit_tree(**kwargs):
     content += description
     content += '\n'
 
-    return hash_commit(content.encode(), write_on_disk=True)
+    sha_1 = hash_commit(content.encode(), write_on_disk=True)
+
+    # update the current branch to the newly created commit
+    branch_file = context.get_context().get_current_branch_file()
+
+    # if not os.path.exists(branch_file):
+    #     os.mknod(branch_file)
+
+    fd = open(branch_file, 'w')
+    fd.write(sha_1)
+    fd.close()
+
+    return sha_1
