@@ -24,13 +24,19 @@ def init(argv=None):
     branches_dir = os.path.join(repo_dir, 'branches')
     objects_dir = os.path.join(repo_dir, 'objects')
     refs_dir = os.path.join(repo_dir, 'refs')
+    refs_heads_dir = os.path.join(refs_dir, 'heads')
 
-    HEAD_file = os.path.join(repo_dir, 'HEAD')
+    head_file = os.path.join(repo_dir, 'HEAD')
 
     os.mkdir(repo_dir)
     os.mkdir(branches_dir)
     os.mkdir(objects_dir)
     os.mkdir(refs_dir)
+    os.mkdir(refs_heads_dir)
 
-    os.mknod(HEAD_file, 0o666)
+    os.mknod(head_file, 0o666)
+    fd = open(head_file, 'w')
+    fd.write('ref: refs/heads/master')
+    fd.close()
+
     print("initialized empty git repository in .git/")
