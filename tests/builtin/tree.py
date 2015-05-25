@@ -18,7 +18,7 @@ class TestWriteTree(TestCase):
         self.assertEqual(expected_sha1, actual_sha1)
 
     def test_commit_tree(self):
-        test_utils.setup_repo()
+        ctx = test_utils.setup_repo()
         fileA = test_utils.create_arena_file('', 'AAAA')
         fileB = test_utils.create_arena_file('', 'BBBB')
         index.update_index([fileA, fileB])
@@ -26,5 +26,13 @@ class TestWriteTree(TestCase):
                                  author_email='<j.placeholder@example.org>',
                                  author_name='John Placeholder',
                                  description='this is the description')
+
+        branch_file = ctx.get_current_branch_file()
+
+        fd = open(branch_file, 'r')
+        actual_sha_1 = fd.read()
+        fd.close()
+
+        self.assertEqual(sha_1, actual_sha_1)
 
         print(sha_1)

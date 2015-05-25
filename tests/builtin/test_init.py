@@ -19,7 +19,7 @@ class TestInit(TestCase):
         refs_dir = os.path.join(repo_dir, 'refs')
         refs_heads_dir = os.path.join(refs_dir, 'heads')
 
-        HEAD_file = os.path.join(repo_dir, 'HEAD')
+        head_file = os.path.join(repo_dir, 'HEAD')
 
         self.assertTrue(os.path.exists(repo_dir), 'missing .git/ directory')
         self.assertTrue(os.path.exists(branches_dir), 'missing branches/ directory')
@@ -27,4 +27,4 @@ class TestInit(TestCase):
         self.assertTrue(os.path.exists(refs_dir), 'missing refs/ directory')
         self.assertTrue(os.path.exists(refs_heads_dir), 'missing refs/heads/ directory')
 
-        self.assertTrue(os.path.exists(HEAD_file), 'missing HEAD file')
+        self.assertTrue(os.path.exists(head_file), 'missing HEAD file')

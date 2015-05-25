@@ -18,6 +18,13 @@ class PitContext:
         self.repo_dir = os.path.join(working_dir, '.git/')
         self.objects_dir = os.path.join(self.repo_dir, 'objects/')
         self.index = os.path.join(self.repo_dir, 'index')
+        self.head = os.path.join(self.repo_dir, 'HEAD')
+
+    def get_current_branch_file(self):
+        fd = open(self.head, 'r')
+        content = fd.read()
+        branch_file = content.rsplit('ref: ')[1]
+        return os.path.join(self.repo_dir, branch_file)
 
 
 def get_context():
