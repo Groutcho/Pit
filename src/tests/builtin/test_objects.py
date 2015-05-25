@@ -1,9 +1,9 @@
 from unittest import TestCase
-from src.builtin import objects
-from tests import test_utils
-from src.builtin.objects import TreeEntry, Tree
 import os.path
-import src.builtin.index as index
+
+from src.builtin import objects
+import test_utils
+from src.builtin.objects import TreeEntry, Tree
 
 __author__ = 'Sébastien Guimmara <sebastien.guimmara@gmail.com>'
 

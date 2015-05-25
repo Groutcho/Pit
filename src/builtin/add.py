@@ -12,7 +12,7 @@ __author__ = 'Sébastien Guimmara <sebastien.guimmara@gmail.com>'
 
 import context
 import os
-from src.builtin import index
+from builtin import index
 import sys
 
 def add(argv):

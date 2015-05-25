@@ -10,7 +10,7 @@ handles index (aka 'staging area') creation and manipulation
 
 __author__ = 'Sébastien Guimmara <sebastien.guimmara@gmail.com>'
 
-import src.builtin.objects as objects
+import builtin.objects as objects
 from hashlib import sha1
 from binascii import hexlify, unhexlify
 import context

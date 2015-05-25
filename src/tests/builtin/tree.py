@@ -1,6 +1,7 @@
 from unittest import TestCase
+
 from src.builtin import tree
-from tests import test_utils
+import test_utils
 from src.builtin import index
 
 __author__ = 'Sébastien Guimmara <sebastien.guimmara@gmail.com>'

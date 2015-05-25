@@ -1,9 +1,10 @@
 # coding: utf-8
 
 from unittest import TestCase
-from tests import test_utils
-from src.builtin import index
 from binascii import hexlify
+
+import test_utils
+from src.builtin import index
 
 __author__ = 'Sébastien Guimmara <sebastien.guimmara@gmail.com>'
 

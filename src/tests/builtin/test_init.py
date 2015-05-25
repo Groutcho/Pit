@@ -1,6 +1,7 @@
 from unittest import TestCase
 import os
-from tests import test_utils
+
+import test_utils
 from src.builtin.init import init
 
 __author__ = 'Sébastien Guimmara <sebastien.guimmara@gmail.com>'
