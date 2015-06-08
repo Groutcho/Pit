@@ -45,5 +45,5 @@ class TestObjects(TestCase):
         nostore_file = test_utils.create_arena_file("don't store", 'DONTSTORE.txt')
         store_sha_1 = objects.hash_file(store_file, write_on_disk=True)
         nostore_sha_1 = objects.hash_file(nostore_file, write_on_disk=False)
-        self.assertTrue(objects.does_object_exist(store_sha_1))
-        self.assertFalse(objects.does_object_exist(nostore_sha_1))
+        self.assertIsNotNone(objects.get_path(store_sha_1))
+        self.assertIsNone(objects.get_path(nostore_sha_1))

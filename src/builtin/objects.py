@@ -125,11 +125,12 @@ def hash_commit(data, write_on_disk=False):
     return hexdigest
 
 
-def does_object_exist(sha_1):
+def get_path(sha_1):
     ctx = context.get_context()
-    if len(sha_1) != 40:
-        print('bad SHA-1 format (expected 40-byte hexdigest). Did you pass a 20-bytes digest ?')
-        raise TypeError()
+    assert len(sha_1) == 40
     pathname = os.path.join(ctx.objects_dir, sha_1[:2])
     pathname = os.path.join(pathname, sha_1[2:])
-    return os.path.exists(pathname)
+    if os.path.exists(pathname):
+        return pathname
+    else:
+        return None
